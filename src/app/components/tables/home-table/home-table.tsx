@@ -1,21 +1,37 @@
 'use client'
 
+import { Select, SelectItem, SelectTrigger } from "@/components/ui/select"
+import { SelectContent, SelectValue } from "@radix-ui/react-select"
+import { PencilIcon } from "lucide-react"
+import { useState } from "react"
+
 type Chamado = {
     id: string,
     titulo: string,
     descricao: string,
     status: string,
+    statusOption?: string[],
     className?: string
 }
 
-const chamados: Chamado[] = [
-    { id: '1', titulo: 'Erro no login', descricao: 'aconteceu algo', status: 'Aberto' },
-    { id: '2', titulo: 'Sistema lento', descricao: 'aconteceu algo', status: 'Em andamento' },
-    { id: '3', titulo: 'Solicitar acesso', descricao: 'aconteceu algo', status: 'Concluído' },
+const chamadosMock: Chamado[] = [
+    { id: '1', titulo: 'Erro no login', descricao: 'aconteceu algo', status: "Aberto", statusOption: ['Aberto', 'Em andamento', 'Concluído'] },
+    { id: '2', titulo: 'Sistema lento', descricao: 'aconteceu algo', status: "Em andamento", statusOption: ['Aberto', 'Em andamento', 'Concluído'] },
+    { id: '3', titulo: 'Solicitar acesso', descricao: 'aconteceu algo', status: "Concluído", statusOption: ['Aberto', 'Em andamento', 'Concluído'] },
 ]
 
 
 export default function HomeTable() {
+
+    const [chamados, setChamados] = useState(chamadosMock)
+
+    function handleStatusChange(id: string, newStatus: string) {
+        setChamados((prevChamados) =>
+            prevChamados.map((chamado) =>
+                chamado.id === id ? { ...chamado, status: newStatus } : chamado
+            )
+        );
+    }
 
     return (
         <div>
@@ -26,6 +42,7 @@ export default function HomeTable() {
                         <th className="px-4 py-2">Título</th>
                         <th className="px-4 py-2">Descrição</th>
                         <th className="px-4 py-2">Status</th>
+                        <th className="px-4 py-2">Alterar status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,6 +62,22 @@ export default function HomeTable() {
                                 >
                                     {chamado.status}
                                 </span>
+                            </td>
+                            <td>
+                                <Select value={chamado.status} onValueChange={(newStatus) => handleStatusChange(chamado.id, newStatus)}>
+                                    <SelectTrigger>
+                                        <SelectValue>
+                                            <PencilIcon />
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-gray-200 shadow-lg z-50">
+                                        {chamado.statusOption?.map((status) => (
+                                            <SelectItem key={status} value={status}>
+                                                {status}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </td>
                         </tr>
                     ))}
