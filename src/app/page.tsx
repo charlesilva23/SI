@@ -1,13 +1,9 @@
 'use client'
 
-import HomeTable from "./components/tables/home-table/home-table";
+import Home from "./home/page";
 
 export default function App() {
   return (
-    <div>
-      <div className="flex py-20 justify-center h-screen">
-        <HomeTable />
-      </div>
-    </div>
-  );
+    <Home />
+  )
 }
