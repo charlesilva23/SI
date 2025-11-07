@@ -1,6 +1,3 @@
-
-
-
 // export interface ChamadoProps {
 //     id: string,
 //     titulo: string,

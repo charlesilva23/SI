@@ -1,10 +1,10 @@
-import type { PropsWithChildren, ReactElement } from 'react'
+import type { PropsWithChildren, ReactElement } from "react";
 
 interface ShowProps extends PropsWithChildren {
-  when: boolean | undefined
-  fallback?: ReactElement | null
+	when: boolean | undefined;
+	fallback?: ReactElement | null;
 }
 
 export function Show({ children, when, fallback = null }: ShowProps) {
-  return when ? children : fallback
+	return when ? children : fallback;
 }
