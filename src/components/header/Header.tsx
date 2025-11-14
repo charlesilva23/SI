@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import Link from "next/link"
+import { cn } from "@/src/lib/utils"
 
 interface Header {
-	navClassName?: string;
+	navClassName?: string
 }
 
 export default function Header({ navClassName }: Header) {
@@ -15,5 +15,5 @@ export default function Header({ navClassName }: Header) {
 				<Link href={"/login"}>Login</Link>
 			</div>
 		</nav>
-	);
+	)
 }

@@ -1,0 +1,3 @@
+export const QUERIES = {
+  QUERY_POST_TICKET: 'QUERY_POST_TICKET'
+}

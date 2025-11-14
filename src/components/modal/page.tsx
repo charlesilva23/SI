@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import type { PropsWithChildren } from "react"
 import {
 	Dialog,
 	DialogContent,
@@ -9,9 +9,9 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "@/components/ui/dialog"
-import type { PropsWithChildren } from "react"
+} from "@/src/components/ui/dialog"
 import { Show } from "../show/page"
+import { Button } from "../ui/button"
 
 interface ModalProps extends PropsWithChildren {
 	isOpen: boolean
@@ -46,5 +46,5 @@ export default function Modal({
 				</Show>
 			</DialogContent>
 		</Dialog>
-	);
+	)
 }

@@ -1,53 +1,22 @@
-"use client";
+"use client"
 
-import { Select, SelectItem, SelectTrigger } from "@/components/ui/select";
-import { SelectContent, SelectValue } from "@radix-ui/react-select";
-import { PencilIcon } from "lucide-react";
-import { useState } from "react";
-
-type Chamado = {
-	id: string;
-	titulo: string;
-	descricao: string;
-	status: string;
-	statusOption?: string[];
-	className?: string;
-};
-
-const chamadosMock: Chamado[] = [
-	{
-		id: "1",
-		titulo: "Erro no login",
-		descricao: "aconteceu algo",
-		status: "Aberto",
-		statusOption: ["Aberto", "Em andamento", "Concluído"],
-	},
-	{
-		id: "2",
-		titulo: "Sistema lento",
-		descricao: "aconteceu algo",
-		status: "Em andamento",
-		statusOption: ["Aberto", "Em andamento", "Concluído"],
-	},
-	{
-		id: "3",
-		titulo: "Solicitar acesso",
-		descricao: "aconteceu algo",
-		status: "Concluído",
-		statusOption: ["Aberto", "Em andamento", "Concluído"],
-	},
-];
+// import { SelectContent, SelectValue } from "@radix-ui/react-select"
+// import { PencilIcon } from "lucide-react"
+import { useListAllTickets } from "@/src/app/home/hooks/use-list-all-tickets"
+// import { useTicketStatus } from "@/src/app/home/hooks/use-ticket-status"
+// import { Select, SelectItem, SelectTrigger } from "@/src/components/ui/select"
 
 export default function HomeTable() {
-	const [chamados, setChamados] = useState(chamadosMock);
+	const { data } = useListAllTickets()
+	// const { data: statusList = [] } = useTicketStatus()
 
-	function handleStatusChange(id: string, newStatus: string) {
-		setChamados((prevChamados) =>
-			prevChamados.map((chamado) =>
-				chamado.id === id ? { ...chamado, status: newStatus } : chamado,
-			),
-		);
-	}
+	// function handleStatusChange(id: string, newStatus: string) {
+	// 	setChamados((prevChamados) =>
+	// 		prevChamados.map((chamado) =>
+	// 			chamado.id === id ? { ...chamado, status: newStatus } : chamado,
+	// 		),
+	// 	);
+	// }
 
 	return (
 		<div>
@@ -62,29 +31,29 @@ export default function HomeTable() {
 					</tr>
 				</thead>
 				<tbody>
-					{chamados.map((chamado) => (
-						<tr key={chamado.id} className="border-t">
-							<td className="px-4 py-2">{chamado.id}</td>
-							<td className="px-4 py-2">{chamado.titulo}</td>
-							<td className="px-4 py-2">{chamado.descricao}</td>
+					{data?.map((ticket) => (
+						<tr key={ticket.id} className="border-t">
+							<td className="px-4 py-2">{ticket?.id}</td>
+							<td className="px-4 py-2">{ticket?.title}</td>
+							<td className="px-4 py-2">{ticket?.description}</td>
 							<td className="px-4 py-2">
 								<span
 									className={`px-2 py-1 rounded text-sm font-medium ${
-										chamado.status === "Aberto"
+										ticket.status === "OPEN"
 											? "bg-yellow-100 text-yellow-800"
-											: chamado.status === "Em andamento"
+											: ticket.statusCode === "IN_PROGRESS"
 												? "bg-blue-100 text-blue-800"
 												: "bg-green-100 text-green-800"
 									}`}
 								>
-									{chamado.status}
+									{ticket.statusName}
 								</span>
 							</td>
-							<td>
+							{/* <td>
 								<Select
-									value={chamado.status}
+									value={ticket.statusCode}
 									onValueChange={(newStatus) =>
-										handleStatusChange(chamado.id, newStatus)
+										handleStatusChange(ticket.id, newStatus)
 									}
 								>
 									<SelectTrigger>
@@ -93,18 +62,18 @@ export default function HomeTable() {
 										</SelectValue>
 									</SelectTrigger>
 									<SelectContent className="bg-gray-200 shadow-lg z-50">
-										{chamado.statusOption?.map((status) => (
-											<SelectItem key={status} value={status}>
-												{status}
+										{statusList?.map(() => (
+											<SelectItem key={ticket.statusCode} value={ticket.statusCode}>
+												{ticket.statusName}
 											</SelectItem>
 										))}
 									</SelectContent>
 								</Select>
-							</td>
+							</td> */}
 						</tr>
 					))}
 				</tbody>
 			</table>
 		</div>
-	);
+	)
 }
