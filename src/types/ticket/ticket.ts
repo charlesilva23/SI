@@ -3,7 +3,8 @@ export type Ticket = {
 	title: string
 	description: string
 	author: string
-	status: string
+	statusId: number | null
+	statusName: string
 	createdAt: string
 	updatedAt: string
 }

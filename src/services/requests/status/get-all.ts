@@ -1,7 +1,12 @@
 import { api } from "@/src/lib/api-manager"
-import type { Ticket } from "@/src/types/ticket/ticket"
 
-export const getAllStatus = async (): Promise<Ticket[]> => {
-	const response = await api.get<Ticket[]>("/api/v1/tickets/status")
+export type TicketStatus = {
+	id: number
+	code: string
+	name: string
+}
+
+export const getAllStatus = async (): Promise<TicketStatus[]> => {
+	const response = await api.get<TicketStatus[]>("/api/v1/tickets/status")
 	return response.data
 }

@@ -39,9 +39,9 @@ export default function HomeTable() {
 							<td className="px-4 py-2">
 								<span
 									className={`px-2 py-1 rounded text-sm font-medium ${
-										ticket.status === "OPEN"
+										ticket.statusId === 2
 											? "bg-yellow-100 text-yellow-800"
-											: ticket.statusCode === "IN_PROGRESS"
+											: ticket.statusId === 1
 												? "bg-blue-100 text-blue-800"
 												: "bg-green-100 text-green-800"
 									}`}

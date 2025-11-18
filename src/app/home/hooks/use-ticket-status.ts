@@ -8,7 +8,6 @@ export const useTicketStatus = () => {
 		queryKey: ["ticket-status"],
 		queryFn: async () => {
 			const data = await getAllStatus()
-			console.log("status:", data)
 			return data
 		},
 		staleTime: 1000 * 60 * 10,

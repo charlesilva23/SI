@@ -25,7 +25,11 @@ export const CreateTicketModal = ({ labelButton }: CreateTicketModalProps) => {
 		actions: { createTicket },
 	} = useCreateTicket()
 	const { data: status = [] } = useTicketStatus()
-	const { register, reset, handleSubmit, control } = useForm<createTicketData>()
+	const { register, reset, handleSubmit, control } = useForm<createTicketData>({
+		defaultValues: {
+			statusId: null,
+		},
+	})
 
 	const onSubmit = async (data: createTicketData) => {
 		console.log("submit chamado com:", data)
@@ -49,16 +53,21 @@ export const CreateTicketModal = ({ labelButton }: CreateTicketModalProps) => {
 					<Input placeholder="Descrição" {...register("description")} />
 					<Input placeholder="Autor" {...register("author")} />
 					<Controller
-						name="status"
+						name="statusId"
 						control={control}
 						render={({ field }) => (
-							<Select onValueChange={field.onChange} value={field.value ?? ""}>
+							<Select
+								value={field.value !== null ? String(field.value) : ""}
+								onValueChange={(value) =>
+									field.onChange(value ? Number(value) : null)
+								}
+							>
 								<SelectTrigger className="w-full border border-black">
 									<SelectValue placeholder="Selecione um status" />
 								</SelectTrigger>
 								<SelectContent>
 									{status.map((status) => (
-										<SelectItem key={status.id} value={status.id}>
+										<SelectItem key={status.id} value={String(status.id)}>
 											{status.name}
 										</SelectItem>
 									))}
