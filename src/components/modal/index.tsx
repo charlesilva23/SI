@@ -10,7 +10,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/src/components/ui/dialog"
-import { Show } from "../show/page"
+import { Show } from "../show"
 import { Button } from "../ui/button"
 
 interface ModalProps extends PropsWithChildren {
@@ -21,14 +21,14 @@ interface ModalProps extends PropsWithChildren {
 	withFooter?: boolean
 }
 
-export default function Modal({
+export const Modal = ({
 	trigger,
 	title,
 	children,
 	isOpen,
 	setOpen,
 	withFooter,
-}: ModalProps) {
+}: ModalProps) => {
 	return (
 		<Dialog open={isOpen} onOpenChange={setOpen}>
 			{trigger && (

@@ -1,6 +1,7 @@
 "use client"
+
 import { CreateTicketModal } from "@/src/components/modal/create-task"
-import HomeTable from "@/src/components/tables/home-table/home-table"
+import { HomeTable } from "@/src/components/tables/home-table"
 
 export default function Home() {
 	return (

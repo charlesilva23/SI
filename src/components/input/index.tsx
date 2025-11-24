@@ -5,11 +5,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	inputClassName?: string
 }
 
-export default function Input({
-	placeholder,
-	inputClassName,
-	...rest
-}: InputProps) {
+export const Input = ({ placeholder, inputClassName, ...rest }: InputProps) => {
 	return (
 		<input
 			type="text"

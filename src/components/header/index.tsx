@@ -7,7 +7,7 @@ interface Header {
 	navClassName?: string
 }
 
-export default function Header({ navClassName }: Header) {
+export const Header = ({ navClassName }: Header) => {
 	return (
 		<nav className="w-full bg-blue-200">
 			<div className={cn("flex justify-between px-10", navClassName)}>

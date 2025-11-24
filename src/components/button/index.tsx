@@ -1,6 +1,6 @@
 import { useState } from "react"
-import Modal from "../modal/page"
-import { Show } from "../show/page"
+import Modal from "../modal"
+import { Show } from "../show"
 
 interface ButtonProps {
 	labelButton?: string

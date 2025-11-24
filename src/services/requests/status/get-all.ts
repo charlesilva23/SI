@@ -7,6 +7,6 @@ export type TicketStatus = {
 }
 
 export const getAllStatus = async (): Promise<TicketStatus[]> => {
-	const response = await api.get<TicketStatus[]>("/api/v1/tickets/status")
+	const response = await api.get<TicketStatus[]>("/tickets/status")
 	return response.data
 }

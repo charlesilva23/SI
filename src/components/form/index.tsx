@@ -1,9 +1,9 @@
 "use client"
 
-import Button from "../button/page"
-import Input from "../input/page"
+import Button from "../button"
+import { Input } from "../input"
 
-export default function Form() {
+export const Form = () => {
 	return (
 		<form>
 			<div className="w-186 flex flex-col justify-center items-center gap-4">
@@ -18,5 +18,5 @@ export default function Form() {
 				</div>
 			</div>
 		</form>
-	);
-}  
+	)
+}
