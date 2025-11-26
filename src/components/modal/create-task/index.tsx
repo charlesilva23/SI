@@ -5,6 +5,8 @@ import { useCreateTicket } from "@/src/components/modal/create-task/hook/use-cre
 import type { createTicketData } from "@/src/services/requests/ticket/create"
 import type { Ticket } from "@/src/types/ticket/ticket"
 import Button from "../../button"
+import { diff } from "../../diff"
+import { useEditTicket } from "../../edit-status-ticket/hooks/use-edit-ticket"
 import { Input } from "../../input"
 import {
 	Select,
@@ -17,19 +19,25 @@ import { Modal } from ".."
 
 interface CreateTicketModalProps {
 	ticket?: Ticket
-	onClose: () => void
 	isOpen: boolean
+	onClose: () => void
 }
 
 export const CreateTicketModal = ({
 	ticket,
-	onClose,
 	isOpen,
+	onClose,
 }: CreateTicketModalProps) => {
 	const {
 		actions: { createTicket },
 	} = useCreateTicket()
+
+	const {
+		actions: { editTicket },
+	} = useEditTicket()
+
 	const { data: status = [] } = useTicketStatus()
+
 	const { register, reset, handleSubmit, control } = useForm<createTicketData>({
 		defaultValues: {
 			title: ticket?.title ?? "",
@@ -47,12 +55,31 @@ export const CreateTicketModal = ({
 				author: ticket.author,
 				statusId: ticket.statusId,
 			})
+		} else if (isOpen) {
+			reset({
+				title: "",
+				description: "",
+				author: "",
+				statusId: null,
+			})
 		}
-	}, [ticket, reset])
+	}, [ticket, isOpen, reset])
 
 	const onSubmit = async (data: createTicketData) => {
 		console.log("submit chamado com:", data)
-		await createTicket(data)
+		if (ticket) {
+			const changed = diff(ticket, data)
+
+			if (Object.keys(changed).length === 0) {
+				console.log("nada mudou")
+				onClose()
+				return
+			}
+
+			await editTicket(ticket.id, data)
+		} else {
+			await createTicket(data)
+		}
 		reset()
 		onClose()
 	}

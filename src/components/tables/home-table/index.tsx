@@ -31,11 +31,21 @@ export const HomeTable = () => {
 		queryClient.invalidateQueries({ queryKey: ["list-all-tickets"] })
 	}
 
+	const openCreateModal = () => {
+		setSelectedTicket(null)
+		setIsOpen(true)
+	}
+
+	const openEditModal = (ticket: Ticket) => {
+		setSelectedTicket(ticket)
+		setIsOpen(true)
+	}
+
 	return (
 		<div>
 			<button
 				className="cursor-pointer border border-gray-400 rounded-md bg-blue-200 w-full p-2"
-				onClick={() => setIsOpen(true)}
+				onClick={openCreateModal}
 				type="button"
 			>
 				Criar Tarefa
@@ -56,8 +66,7 @@ export const HomeTable = () => {
 							key={ticket.id}
 							className="border-t cursor-pointer hover:bg-gray-100"
 							onClick={() => {
-								setIsOpen(true)
-								setSelectedTicket(ticket)
+								openEditModal(ticket)
 							}}
 						>
 							<td className="px-4 py-2">{ticket?.id}</td>
