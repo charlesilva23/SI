@@ -1,29 +1,39 @@
 "use client"
 
+import {
+	DndContext,
+	DragOverlay,
+	PointerSensor,
+	rectIntersection,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core"
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useListAllTickets } from "@/src/app/home/hooks/use-list-all-tickets"
 import type { Ticket } from "@/src/types/ticket/ticket"
-// import { EditStatus } from "../../edit-status-ticket"
-// import { useEditTicket } from "../../edit-status-ticket/hooks/use-edit-ticket"
+import { TicketCard } from "../../cards/tickets"
+import { Columns } from "../../kanbam/column"
 import { CreateTicketModal } from "../../modal/create-task"
+import { SortableCard } from "../../sortable-card"
+import { useKanban } from "./use-kanban"
 
 export const HomeTable = () => {
 	const queryClient = useQueryClient()
-	const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
-	const { data } = useListAllTickets()
+	const { data: tickets } = useListAllTickets()
+	const { columns, activeTicket, handlers, columnActions } = useKanban(tickets)
+
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			activationConstraint: {
+				distance: 10,
+			},
+		}),
+	)
+
 	const [isOpen, setIsOpen] = useState(false)
-
-	// const { actions: { editTicket } } = useEditTicket()
-
-	// const {
-	// 	actions: { editTicket },
-	// } = useEditTicket()
-
-	// const onEdit = async (data: Ticket) => {
-	// 	await editTicket(data)
-	// 	setOpen(false)
-	// }]
+	const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
 
 	const handleModal = () => {
 		setIsOpen(false)
@@ -42,40 +52,71 @@ export const HomeTable = () => {
 	}
 
 	return (
-		<div>
-			<button
-				className="cursor-pointer border border-gray-400 rounded-md bg-blue-200 w-full p-2"
-				onClick={openCreateModal}
-				type="button"
-			>
-				Criar Tarefa
-			</button>
+		<div className="w-full px-16">
+			<div className="flex gap-4 mb-4">
+				<button
+					className="cursor-pointer border border-gray-400 rounded-md bg-blue-200 px-4 py-2"
+					onClick={openCreateModal}
+					type="button"
+				>
+					Criar Tarefa
+				</button>
+				<button
+					className="cursor-pointer border bg-green-200 px-4 py-2 rounded"
+					onClick={columnActions.createColumn}
+					type="button"
+				>
+					Criar Coluna
+				</button>
+			</div>
 
-			<table className="w-[1300px] bg-white shadow rounded-lg overflow-hidden">
-				<thead className="bg-gray-100 text-left">
-					<tr>
-						<th className="px-4 py-2">ID</th>
-						<th className="px-4 py-2">Título</th>
-						<th className="px-4 py-2">Descrição</th>
-						<th className="px-4 py-2">Status</th>
-					</tr>
-				</thead>
-				<tbody>
-					{data?.map((ticket) => (
-						<tr
-							key={ticket.id}
-							className="border-t cursor-pointer hover:bg-gray-100"
-							onClick={() => {
-								openEditModal(ticket)
-							}}
-						>
-							<td className="px-4 py-2">{ticket?.id}</td>
-							<td className="px-4 py-2">{ticket?.title}</td>
-							<td className="px-4 py-2">{ticket?.description}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+			{tickets && (
+				<DndContext
+					sensors={sensors}
+					onDragStart={handlers.handleDragStart}
+					onDragEnd={handlers.handleDragEnd}
+					onDragOver={handlers.handleDragOver}
+					onDragCancel={handlers.handleDragCancel}
+					collisionDetection={rectIntersection}
+				>
+					<div className="flex gap-4 items-start w-full overflow-x-auto py-4 justify-center">
+						<SortableContext items={columns.map((c) => c.id)}>
+							{columns.map((col) => (
+								<Columns
+									key={col.id}
+									columnId={col.id}
+									title={col.title}
+									renameColumn={columnActions.renameColumn}
+									deleteColumn={columnActions.deleteColumn}
+								>
+									<SortableContext
+										items={col.ticketIds}
+										strategy={verticalListSortingStrategy}
+									>
+										{col.ticketIds.map((ticketId) => {
+											const ticket = tickets.find((t) => t.id === ticketId)
+											if (!ticket) return null
+											return (
+												<SortableCard
+													key={ticket?.id}
+													ticket={ticket}
+													columnId={col.id}
+													onClick={openEditModal}
+												/>
+											)
+										})}
+									</SortableContext>
+								</Columns>
+							))}
+						</SortableContext>
+					</div>
+					<DragOverlay>
+						{activeTicket ? (
+							<TicketCard ticket={activeTicket} onClick={() => {}} />
+						) : null}
+					</DragOverlay>
+				</DndContext>
+			)}
 
 			<CreateTicketModal
 				ticket={selectedTicket ?? undefined}

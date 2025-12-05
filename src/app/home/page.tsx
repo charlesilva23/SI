@@ -12,7 +12,7 @@ export default function Home() {
 				</div>
 			</div>
 			<div>
-				<div className="flex justify-center py-10">
+				<div className="flex justify-center w-full py-10">
 					<HomeTable />
 				</div>
 			</div>
